@@ -359,6 +359,21 @@ Example:
 ...
 ```
 
+In the charts, by default, the mean nodes (M) are displayed, while the true nodes are not displayed. 
+To display them, you need to edit the configuration file (kr.config.json).
+
+## JSON Support
+
+The astrological subject, which is the base of data used in the library, can be easily serialized to JSON with the `json` method.
+
+```python
+from kerykeion import AstrologicalSubject
+
+johnny = AstrologicalSubject("Johnny Depp", 1963, 6, 9, 0, 0, "Owensboro", "US")
+
+print(johnny.json(dump=False, indent=2))
+```
+
 ## Documentation
 
 Most of the functions and the classes are self documented by the types and have docstrings.
@@ -386,3 +401,7 @@ You can implement the logic of kerykeion in your project and also keep it closed
 ## Contributing
 
 Feel free to contribute to the code!
+
+
+### TODO
+codex resume 019ef390-3b87-7a71-8004-3e40ef7998bd
