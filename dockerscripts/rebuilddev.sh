@@ -1,0 +1,1 @@
+docker build -t astor:python-3.11 -f Dockerfile.lambda .

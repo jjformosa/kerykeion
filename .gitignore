@@ -53,6 +53,6 @@ request_cache
 Pipfile
 .mypy_cache
 
-Dockerfile*
-dockerscripts/
+# Dockerfile*
+# dockerscripts/
 python/

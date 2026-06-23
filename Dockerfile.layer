@@ -1,0 +1,14 @@
+FROM python:3.11-alpine AS layer-builder
+
+# Set working directory
+WORKDIR /app
+
+# Copy requirements file and source code
+COPY . .
+
+# Install dependencies as a layer
+RUN pip install -t python -r kerykeion/requirements.txt
+COPY kerykeion python/lib/python3.11/site-packages
+
+# to use poetry
+# https://blog.kyomind.tw/python-poetry/#Poetry-%E6%96%B0%E5%A2%9E%E5%A5%97%E4%BB%B6

@@ -1,0 +1,15 @@
+# Second stage for the Lambda function
+FROM public.ecr.aws/lambda/python:3.11
+
+ENV ASTROLOGY_CHART_BUCKET='amplify-d2cbfkrtv7urrr-amplif-inseenbucket909b8387-advki4vx1trx'
+
+# Copy the layer directly from builder to /opt
+COPY kerykeion ${LAMBDA_TASK_ROOT}
+
+RUN pip install kerykeion -t ${LAMBDA_TASK_ROOT}
+
+# Copy your Lambda function code
+COPY lambda_function.py ${LAMBDA_TASK_ROOT}
+
+# Command for the Lambda function
+CMD [ "lambda_function.handler" ]
