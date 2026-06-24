@@ -8,6 +8,11 @@ Legend:
 
 ## Tasks
 
+- [ ] In-seen Lambda: eventually remove the local fork dependency and use the official pip package directly.
+  - [ ] Keep the current local-fork Lambda image until the current integration is tested with the main project and works as expected.
+  - [ ] After the current version is validated, plan a package upgrade path using pinned pip dependencies instead of copying the forked `kerykeion` source into the image.
+  - [ ] Re-test SVG generation, DynamoDB Stream handling, and S3 upload after switching to the pip package.
+
 - [x] Fix the unit tests. The code is working but the tests must be updated to the new features.
 - [ ] Create unit test for checking polar circle
 - [ ] Finish the new examples to be added to the documentation
