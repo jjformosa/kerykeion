@@ -1,12 +1,21 @@
 # Second stage for the Lambda function
 FROM public.ecr.aws/lambda/python:3.11
 
-ENV ASTROLOGY_CHART_BUCKET='amplify-d2cbfkrtv7urrr-amplif-inseenbucket909b8387-advki4vx1trx'
+# ENV ASTROLOGY_CHART_BUCKET='amplify-d2cbfkrtv7urrr-amplif-inseenbucket909b8387-advki4vx1trx'
 
-# Copy the layer directly from builder to /opt
-COPY kerykeion ${LAMBDA_TASK_ROOT}
+# Install runtime dependencies without pulling kerykeion from PyPI.
+RUN pip install --no-cache-dir -t ${LAMBDA_TASK_ROOT} \
+    pyswisseph==2.10.3.2 \
+    pytz==2022.7.1 \
+    pydantic==2.10.3 \
+    terminaltables==3.1.10 \
+    scour==0.38.2 \
+    requests-cache==1.2.1 \
+    requests==2.32.3 \
+    boto3==1.35.76
 
-RUN pip install kerykeion -t ${LAMBDA_TASK_ROOT}
+# Use the local forked package source.
+COPY kerykeion ${LAMBDA_TASK_ROOT}/kerykeion
 
 # Copy your Lambda function code
 COPY lambda_function.py ${LAMBDA_TASK_ROOT}
