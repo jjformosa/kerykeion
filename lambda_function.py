@@ -2,6 +2,7 @@ import os
 import json
 from kerykeion import AstrologicalSubject, KerykeionChartSVG
 import boto3
+import traceback
 
 def handler(event, context):
     
@@ -58,16 +59,26 @@ def handler(event, context):
                 synastry_chart = KerykeionChartSVG(person, new_output_directory="/tmp", chart_language="CN")
                 synastry_chart.makeSVG()
 
-                # Read file to memory
-                with open(f"/tmp/{file_name} - Natal Chart.svg", "r") as f:
+                # Read file to memory as bytes for S3 PutObject.
+                with open(f"/tmp/{file_name} - Natal Chart.svg", "rb") as f:
                     svg_content = f.read()
                 
                 # upload svg to s3
                 bucket_name = os.environ['ASTROLOGY_CHART_BUCKET']
+                object_key = f'astrology/{file_name}/astrology.svg'
+                print(
+                    "Uploading SVG to S3",
+                    {
+                        "bucket": bucket_name,
+                        "key": object_key,
+                        "body_type": type(svg_content).__name__,
+                        "body_size": len(svg_content),
+                    },
+                )
                 s3 = boto3.client('s3')
                 s3_upload = s3.put_object(
                     Bucket=bucket_name,
-                    Key=f'astrology/{file_name}/astrology.svg',
+                    Key=object_key,
                     Body=svg_content,
                     ContentType='image/svg+xml'
                 )
@@ -86,7 +97,8 @@ def handler(event, context):
         import sys
         exc_type, exc_obj, exc_tb = sys.exc_info()
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        print(exc_type, fname, exc_tb.tb_lineno)
+        print(exc_type, fname, exc_tb.tb_lineno, repr(e))
+        traceback.print_exc()
         return {
             'statusCode': 500,
             'body': json.dumps({'error': 'Internal server error'})
