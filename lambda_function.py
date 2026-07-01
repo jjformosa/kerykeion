@@ -58,8 +58,8 @@ def handler(event, context):
                 synastry_chart = KerykeionChartSVG(person, new_output_directory="/tmp", chart_language="CN")
                 synastry_chart.makeSVG()
 
-                # Read file to memory
-                with open(f"/tmp/{file_name} - Natal Chart.svg", "r") as f:
+                # Read file to memory as bytes because S3 PutObject Body must be bytes or a file-like object.
+                with open(f"/tmp/{file_name} - Natal Chart.svg", "rb") as f:
                     svg_content = f.read()
                 
                 # upload svg to s3
@@ -86,7 +86,7 @@ def handler(event, context):
         import sys
         exc_type, exc_obj, exc_tb = sys.exc_info()
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        print(exc_type, fname, exc_tb.tb_lineno)
+        print(exc_type, fname, exc_tb.tb_lineno, repr(e))
         return {
             'statusCode': 500,
             'body': json.dumps({'error': 'Internal server error'})
